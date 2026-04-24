@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEXUS — Mission Board</title>
+  <link rel="stylesheet" href="app.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- XP Toast -->
+  <div id="xp-toast" class="xp-toast" aria-live="polite"></div>
+
+  <!-- Level Up Modal -->
+  <div id="level-modal" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <div class="modal-icon">⚡</div>
+      <h2>Level Up!</h2>
+      <p id="modal-lvl-text">You reached Level 2!</p>
+      <div class="modal-badges" id="modal-badge-list"></div>
+      <button onclick="closeModal()" class="btn-primary">Continue Mission</button>
+    </div>
+  </div>
+
+  <!-- AI Suggest Modal -->
+  <div id="ai-modal" class="modal-overlay" style="display:none">
+    <div class="modal-box ai-modal-box">
+      <div class="ai-modal-header">
+        <span class="ai-icon">🤖</span>
+        <h3>AI Mission Planner</h3>
+        <button class="close-ai" onclick="closeAI()">✕</button>
+      </div>
+      <div id="ai-chat" class="ai-chat"></div>
+      <div class="ai-input-row">
+        <input type="text" id="ai-input" placeholder="Ask me to plan your day, suggest tasks..." onkeydown="aiKeydown(event)"/>
+        <button onclick="sendAI()" class="ai-send-btn">→</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="brand">
+        <div class="brand-icon">⬡</div>
+        <span class="brand-name">NEXUS</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebar-close" onclick="toggleSidebar()">✕</button>
+    </div>
+
+    <!-- User Profile -->
+    <div class="profile-card">
+      <div class="avatar" id="user-avatar">A</div>
+      <div class="profile-info">
+        <div class="profile-name" id="profile-name">Agent</div>
+        <div class="profile-level" id="profile-level">Level 1 Rookie</div>
+      </div>
+    </div>
+
+    <!-- XP Bar -->
+    <div class="xp-section">
+      <div class="xp-label-row">
+        <span class="xp-label">XP Progress</span>
+        <span class="xp-numbers" id="xp-numbers">0 / 200 XP</span>
+      </div>
+      <div class="xp-bar-track">
+        <div class="xp-bar-fill" id="xp-bar"></div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="mini-stats">
+      <div class="mini-stat">
+        <span class="mini-stat-val" id="stat-done">0</span>
+        <span class="mini-stat-lbl">Done</span>
+      </div>
+      <div class="mini-stat">
+        <span class="mini-stat-val" id="stat-streak">0🔥</span>
+        <span class="mini-stat-lbl">Streak</span>
+      </div>
+      <div class="mini-stat">
+        <span class="mini-stat-val" id="stat-total">0</span>
+        <span class="mini-stat-lbl">Total</span>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="badges-section">
+      <div class="section-label">Badges Earned</div>
+      <div class="badges-grid" id="badges-grid">
+        <div class="badge-empty">Complete tasks to earn badges!</div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="setFilter('all', this)">
+        <span>📋</span> All Missions
+      </button>
+      <button class="nav-item" onclick="setFilter('active', this)">
+        <span>⚡</span> Active
+      </button>
+      <button class="nav-item" onclick="setFilter('done', this)">
+        <span>✅</span> Completed
+      </button>
+    </nav>
+
+    <button class="logout-btn" onclick="logout()">← Exit Mission</button>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-area">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div>
+          <h1 class="page-title">Mission Board</h1>
+          <p class="page-sub" id="page-date"></p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="ai-btn" onclick="openAI()">
+          <span>🤖</span> AI Planner
+        </button>
+      </div>
+    </header>
+
+    <!-- Category Filter -->
+    <div class="category-strip" id="category-strip">
+      <button class="cat-btn active" onclick="setCategory('all', this)">All</button>
+      <button class="cat-btn" onclick="setCategory('Work', this)">Work</button>
+      <button class="cat-btn" onclick="setCategory('Personal', this)">Personal</button>
+      <button class="cat-btn" onclick="setCategory('Health', this)">Health</button>
+      <button class="cat-btn" onclick="setCategory('Learning', this)">Learning</button>
+    </div>
+
+    <!-- Add Task -->
+    <div class="add-section">
+      <div class="add-card">
+        <div class="add-row">
+          <input type="text" id="task-input" class="task-input" placeholder="Add a new mission..." maxlength="120" onkeydown="taskKeydown(event)"/>
+          <button class="add-btn" onclick="addTask()">+ Add</button>
+        </div>
+        <div class="add-meta">
+          <select id="task-priority" class="meta-select">
+            <option value="low">🟢 Low (10 XP)</option>
+            <option value="medium" selected>🟡 Medium (25 XP)</option>
+            <option value="high">🔴 High (50 XP)</option>
+          </select>
+          <select id="task-category" class="meta-select">
+            <option value="Work">💼 Work</option>
+            <option value="Personal">🌟 Personal</option>
+            <option value="Health">💪 Health</option>
+            <option value="Learning">📚 Learning</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-section">
+      <div class="progress-label-row">
+        <span id="progress-label">0 of 0 missions complete</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Task List -->
+    <div class="task-list" id="task-list">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">🚀</div>
+        <p>No missions yet. Add your first task above!</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
