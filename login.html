@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEXUS — Login</title>
+  <link rel="stylesheet" href="login.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="grid-bg"></div>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <main class="login-wrap">
+    <div class="login-left">
+      <div class="brand">
+        <div class="brand-icon">⬡</div>
+        <span class="brand-name">NEXUS</span>
+      </div>
+      <h1 class="tagline">Turn chaos<br/><em>into clarity.</em></h1>
+      <p class="sub">A gamified task OS for people who actually get things done.</p>
+      <div class="stats-row">
+        <div class="stat"><span class="stat-num">94%</span><span class="stat-lbl">Completion Rate</span></div>
+        <div class="stat"><span class="stat-num">12x</span><span class="stat-lbl">More Focused</span></div>
+        <div class="stat"><span class="stat-num">∞</span><span class="stat-lbl">XP to Earn</span></div>
+      </div>
+    </div>
+
+    <div class="login-right">
+      <div class="card">
+        <div class="card-header">
+          <h2>Welcome back</h2>
+          <p>Enter your credentials to access your mission board.</p>
+        </div>
+
+        <div class="tab-row">
+          <button class="tab active" id="tab-login" onclick="switchTab('login')">Login</button>
+          <button class="tab" id="tab-signup" onclick="switchTab('signup')">Sign up</button>
+        </div>
+
+        <form id="auth-form" onsubmit="handleAuth(event)">
+          <div class="field" id="field-name" style="display:none">
+            <label>Display Name</label>
+            <input type="text" id="name" placeholder="Commander Rex" autocomplete="off"/>
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="you@nexus.io" autocomplete="off" required/>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="password" placeholder="••••••••" required/>
+              <button type="button" class="toggle-pass" onclick="togglePass()">👁</button>
+            </div>
+          </div>
+          <div id="error-msg" class="error-msg" style="display:none"></div>
+          <button type="submit" class="btn-primary" id="auth-btn">
+            <span id="btn-text">Access Mission Board</span>
+            <span class="btn-arrow">→</span>
+          </button>
+        </form>
+
+        <div class="divider"><span>or continue with</span></div>
+        <div class="social-row">
+          <button class="social-btn" onclick="guestLogin()">
+            <span>⚡</span> Guest Mode
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="login.js"></script>
+</body>
+</html>
